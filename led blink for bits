@@ -1,0 +1,38 @@
+#include <wiringPi.h>
+#include <iostream>
+#include <bitset>
+#include <unistd.h>  
+using namespace std;
+int gpioPins[8] = {0, 1, 2, 3, 4, 5, 6, 7};  // Example pins
+void displayBinary(int number) {
+    bitset<8> binary(number);  // Convert number to 8-bit binary
+ for (int i = 0; i < 8; i++) {
+        if (binary[i] == 1)
+            digitalWrite(gpioPins[i], HIGH);  // Turn ON LED
+        else
+            digitalWrite(gpioPins[i], LOW);   // Turn OFF LED
+    }
+}
+int main() {
+    if (wiringPiSetup() == -1) {
+        cout << "Setup failed!" << endl;
+        return 1;
+    }
+    for (int i = 0; i < 8; i++) {
+        pinMode(gpioPins[i], OUTPUT);
+    }
+  int number;
+    while (true) {
+        cout << "Enter a decimal number (0-255): ";
+        cin >> number;
+
+        if (number < 0 || number > 255) {
+            cout << "Number out of range" << endl;
+            break;
+        }
+displayBinary(number);
+        sleep(2); // Hold output for 2 seconds
+    }
+
+    return 0;
+}
